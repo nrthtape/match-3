@@ -1,5 +1,4 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: './src/scripts/index.js',
@@ -15,17 +14,6 @@ module.exports = {
         use: 'babel-loader'
       },
       {
-        test: /\.html$/i,
-        use: [
-          {
-            loader: 'html-loader',
-            options: {
-              minimize: true
-            }
-          }
-        ]
-      },
-      {
         test: /\.(png|jpe?g|gif)$/i,
         use: [
           {
@@ -39,16 +27,5 @@ module.exports = {
         ]
       }
     ]
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: './index.html',
-      filename: 'index.html',
-      inject: true,
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true
-      }
-    })
-  ]
+  }
 };
