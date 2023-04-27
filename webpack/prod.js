@@ -8,7 +8,7 @@ module.exports = merge(baseConfig, {
     new HtmlWebpackPlugin({
       template: './index.html',
       filename: 'index.html',
-      inject: false
+      inlineSource: '.(js|css)$'
     })
   ]
 });
