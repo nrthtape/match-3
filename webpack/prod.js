@@ -1,32 +1,37 @@
 const path = require('path');
-const { merge } = require('webpack-merge');
-const baseConfig = require('./base');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlInlineScriptPlugin = require('html-inline-script-webpack-plugin');
 
-module.exports = merge(baseConfig, {
+module.exports = {
   mode: 'production',
-  entry: {
-    app: './src/scripts/index.js'
-  },
+  entry: './src/scripts/index.js',
   output: {
     filename: 'index.js',
-    path: path.resolve(__dirname, '../dist')
+    path: path.resolve(__dirname, 'dist')
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 8192,
+              esModule: false,
+              name: '[name].[hash:7].[ext]'
+            }
+          }
+        ]
+      }
+    ]
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: './index.html',
       filename: 'index.html',
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeAttributeQuotes: true
-      },
-      inject: 'body',
-      scriptLoading: 'blocking',
-      inlineSource: '.(js)$',
-      templateParameters: {
-        'js': '<%= htmlWebpackPlugin.files.js[0] %>'
-      }
-    })
+      inject: 'body'
+    }),
+    new HtmlInlineScriptPlugin(HtmlWebpackPlugin)
   ]
-});
+};
