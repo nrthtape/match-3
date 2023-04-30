@@ -1,37 +1,24 @@
 const path = require('path');
+const { merge } = require('webpack-merge');
+const baseConfig = require('./base');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlInlineScriptPlugin = require('html-inline-script-webpack-plugin');
 
-module.exports = {
+module.exports = merge(baseConfig, {
   mode: 'production',
-  entry: './src/scripts/index.js',
+  entry: {
+    app: './src/scripts/index.js'
+  },
   output: {
     filename: 'index.js',
-    path: path.resolve(__dirname, 'dist')
-  },
-  module: {
-    rules: [
-      {
-        test: /\.(png|jpe?g|gif)$/i,
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              limit: 8192,
-              esModule: false,
-              name: '[name].[hash:7].[ext]'
-            }
-          }
-        ]
-      }
-    ]
+    path: path.resolve(__dirname, '../dist')
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: './index.html',
-      filename: 'index.html',
-      inject: 'body'
+      inlineSource: '.(js|css)$',
+      scriptLoading: 'blocking'
     }),
     new HtmlInlineScriptPlugin(HtmlWebpackPlugin)
   ]
-};
+});
